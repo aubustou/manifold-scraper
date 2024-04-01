@@ -287,13 +287,20 @@ def main():
         "library_id", type=int, help="The ID of the library to associate the data with."
     )
     parser.add_argument("psql_uri", type=str, help="The URI of the PostgreSQL database")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Don't insert data into the database, just print it",
+    )
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
 
     # Initialize the database connection
-    session = init_engine(args.psql_uri)
-    session = MockSession()
+    if args.dry_run:
+        session = MockSession()
+    else:
+        session = init_engine(args.psql_uri)
 
     # Call the function to insert data into the table
     insert_folders(session, args.root_folder, args.library_id)
