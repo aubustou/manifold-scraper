@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import argparse
-import datetime
 import hashlib
 import logging
+from datetime import datetime
 from pathlib import Path
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text, create_engine
@@ -17,9 +17,20 @@ logger = logging.getLogger(__name__)
 class MockSession:
     def add(self, model):
         logger.info("Adding %s", model)
+        for column in model.__table__.columns:
+            logger.info("  %s: %s", column.name, getattr(model, column.name))
 
     def commit(self):
         logger.info("Committing")
+
+    def query(self, model):
+        return self
+
+    def filter_by(self, **kwargs):
+        return self
+
+    def first(self):
+        return None
 
 
 # Define the table model
@@ -229,8 +240,8 @@ def get_or_create_creator(session, name):
     else:
         creator = Creator(
             name=name,
-            created_at=datetime.datetime.now(),
-            updated_at=datetime.datetime.now(),
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
         )
         session.add(creator)
         session.commit()
@@ -250,8 +261,8 @@ def get_or_create_collection(session, name, collection_id):
         collection = Collection(
             name=name,
             collection_id=collection_id,
-            created_at=datetime.datetime.now(),
-            updated_at=datetime.datetime.now(),
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
         )
         session.add(collection)
         session.commit()
