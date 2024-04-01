@@ -228,7 +228,7 @@ def insert_folders(session, root_folder, library_id):
 
 def get_infos(path):
     creator, collection, model_name = path.parts[-3:]
-    model_name, uuid = model_name.split("-")
+    model_name, uuid = model_name.rsplit("-", 1)
     return creator, collection, model_name, uuid
 
 
