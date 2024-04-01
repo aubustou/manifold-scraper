@@ -208,10 +208,8 @@ def insert_folders(session, root_folder, library_id):
 
                 creator, collection, model_name, uuid = get_infos(model_path)
 
-                creator_id = get_or_create_creator(session, creator.name).id
-                collection_id = get_or_create_collection(
-                    session, collection.name, None
-                ).id
+                creator_id = get_or_create_creator(session, creator).id
+                collection_id = get_or_create_collection(session, collection, None).id
                 model = Model(
                     name=model_path.name,
                     path=str(sanitize_path(root_folder, model_path)),
